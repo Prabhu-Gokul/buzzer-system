@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Connection Game</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            align-items: stretch;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="status-bar glass">
+        <div class="status-indicator">
+            <div class="dot online"></div>
+            <span>ADMIN CONSOLE</span>
+        </div>
+        <div>
+            <span>Connected: </span><span id="participant-count">0</span>
+        </div>
+    </div>
+
+    <div class="admin-grid">
+        <!-- Left Column: Controls and Buzzers -->
+        <div class="panel glass">
+            <h2>Game Controls</h2>
+            <div class="controls">
+                <button class="btn btn-primary" id="start-btn">START ROUND</button>
+                <button class="btn btn-danger" id="reset-btn">RESET ALL</button>
+            </div>
+
+            <hr style="border: 0.5px solid rgba(255,255,255,0.1)">
+
+            <h3>Current Buzzers</h3>
+            <div class="positions" id="buzz-results">
+                <!-- Buzzers will appear here -->
+            </div>
+        </div>
+
+        <!-- Right Column: Participant List and Scoring -->
+        <div class="panel glass">
+            <h2>Leaderboard</h2>
+            <ul class="participant-list" id="participant-list">
+                <!-- Participants will appear here -->
+            </ul>
+
+            <hr style="border: 0.5px solid rgba(255,255,255,0.1)">
+
+            <h3>Round History</h3>
+            <div id="history-log"
+                style="font-size: 0.8rem; color: var(--text-dim); overflow-y: auto; max-height: 200px;">
+                <!-- History logs -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const buzzResults = document.getElementById('buzz-results');
+        const participantList = document.getElementById('participant-list');
+        const historyLog = document.getElementById('history-log');
+
+        startBtn.onclick = () => socket.emit('admin_start');
+        resetBtn.onclick = () => socket.emit('admin_reset');
+
+        socket.on('participantUpdate', (participants) => {
+            document.getElementById('participant-count').textContent = participants.length;
+            participantList.innerHTML = participants
+                .sort((a, b) => b.score - a.score)
+                .map(p => `
+                    <li class="participant-item">
+                        <span>${p.name}</span>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <span class="score-badge">${p.score}</span>
+                            <button onclick="award('${p.id}', 10)" style="font-size:0.7rem;">+10</button>
+                        </div>
+                    </li>
+                `).join('');
+        });
+
+        socket.on('buzzReceived', (buzzers) => {
+            buzzResults.innerHTML = buzzers.map((b, i) => `
+                <div class="position-card pos-${i + 1}">
+                    <div style="font-size: 1.5rem; font-weight: bold;">#${i + 1}</div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 1.2rem;">${b.name}</div>
+                        <div style="font-size: 0.8rem; opacity: 0.8;">${new Date(b.timestamp).toLocaleTimeString()}</div>
+                    </div>
+                    <div style="margin-left: auto;">
+                        <button onclick="award('${b.socketId}', 10)" class="btn btn-primary" style="padding: 5px 10px; font-size: 0.7rem;">+10</button>
+                    </div>
+                </div>
+            `).join('');
+
+            if (buzzers.length === 2) {
+                // Auto log after second buzz
+                socket.emit('admin_logRound', { winners: buzzers.map(b => b.name) });
+            }
+        });
+
+        socket.on('historyUpdate', (history) => {
+            historyLog.innerHTML = history.reverse().map(h => `
+                <div style="padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05)">
+                    [${h.timestamp}] Winners: ${h.winners.join(', ') || 'None'}
+                </div>
+            `).join('');
+        });
+
+        socket.on('lockStatus', (isLocked) => {
+            startBtn.disabled = !isLocked;
+            startBtn.style.opacity = isLocked ? '1' : '0.5';
+        });
+
+        socket.on('roundStarted', () => {
+            buzzResults.innerHTML = '<p style="text-align:center; color: var(--success);">ROUND ACTIVE - WAITING FOR BUZZERS...</p>';
+        });
+
+        socket.on('roundReset', () => {
+            buzzResults.innerHTML = '';
+        });
+
+        function award(socketId, pts) {
+            socket.emit('admin_awardPoints', { socketId, points: pts });
+        }
+    </script>
+</body>
+
+</html>

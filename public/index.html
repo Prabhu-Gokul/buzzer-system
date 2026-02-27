@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Connection Game - Buzzer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-overlay">
+        <div class="login-card glass">
+            <h2>Join the Game</h2>
+            <p style="color: var(--text-dim)">Enter your name to register</p>
+            <input type="text" id="name-input" placeholder="Your Name" autocomplete="off">
+            <button class="btn btn-primary" id="join-btn">Connect Buzzer</button>
+        </div>
+    </div>
+
+    <div class="status-bar glass">
+        <div class="status-indicator">
+            <div id="connection-dot" class="dot"></div>
+            <span id="connection-text">Connecting...</span>
+        </div>
+        <div id="lock-status" class="status-indicator">
+            <span id="lock-text">LOCKED</span>
+            <div id="lock-dot" class="dot locked"></div>
+        </div>
+    </div>
+
+    <div class="buzzer-container">
+        <div id="user-info" style="margin-bottom: 0.5rem; text-align: center;">
+            <h1 id="display-name">---</h1>
+            <p style="color: var(--text-dim)">Score: <span id="display-score">0</span></p>
+        </div>
+        
+        <button id="buzzer" disabled>BUZZ</button>
+        
+        <div id="personal-status" style="margin-top: 1rem; font-weight: 600;"></div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const buzzer = document.getElementById('buzzer');
+        const loginOverlay = document.getElementById('login-overlay');
+        const nameInput = document.getElementById('name-input');
+        const joinBtn = document.getElementById('join-btn');
+        const personalStatus = document.getElementById('personal-status');
+        
+        let myName = '';
+
+        joinBtn.onclick = () => {
+            const name = nameInput.value.trim();
+            if (name) {
+                myName = name;
+                socket.emit('join', name);
+                loginOverlay.style.display = 'none';
+                document.getElementById('display-name').textContent = name;
+            }
+        };
+
+        buzzer.onpointerdown = (e) => {
+            e.preventDefault();
+            socket.emit('buzz');
+        };
+
+        socket.on('connect', () => {
+            document.getElementById('connection-dot').className = 'dot online';
+            document.getElementById('connection-text').textContent = 'Live';
+        });
+
+        socket.on('disconnect', () => {
+            document.getElementById('connection-dot').className = 'dot';
+            document.getElementById('connection-text').textContent = 'Offline';
+        });
+
+        socket.on('lockStatus', (isLocked) => {
+            buzzer.disabled = isLocked;
+            const lockDot = document.getElementById('lock-dot');
+            const lockText = document.getElementById('lock-text');
+            
+            if (isLocked) {
+                lockDot.className = 'dot locked';
+                lockText.textContent = 'LOCKED';
+            } else {
+                lockDot.className = 'dot online';
+                lockText.textContent = 'READY';
+                personalStatus.textContent = '';
+                personalStatus.style.color = 'inherit';
+            }
+        });
+
+        socket.on('buzzReceived', (buzzers) => {
+            const myBuzz = buzzers.find(b => b.name === myName);
+            if (myBuzz) {
+                const pos = buzzers.indexOf(myBuzz) + 1;
+                personalStatus.textContent = `BUZZED! POSITION: ${pos}`;
+                personalStatus.style.color = pos === 1 ? '#fbbf24' : '#94a3b8';
+                buzzer.disabled = true;
+            }
+        });
+
+        socket.on('participantUpdate', (participants) => {
+            const me = participants.find(p => p.name === myName);
+            if (me) {
+                document.getElementById('display-score').textContent = me.score;
+            }
+        });
+
+        socket.on('roundReset', () => {
+            personalStatus.textContent = '';
+        });
+    </script>
+</body>
+</html>
