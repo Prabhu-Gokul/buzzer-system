@@ -1,41 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Connection Game - Buzzer</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="login-overlay">
         <div class="login-card glass">
-            <h2>Join the Game</h2>
-            <p style="color: var(--text-dim)">Enter your name to register</p>
-            <input type="text" id="name-input" placeholder="Your Name" autocomplete="off">
-            <button class="btn btn-primary" id="join-btn">Connect Buzzer</button>
+            <h1 style="font-weight: 800; font-size: 2.5rem; margin-bottom: 0.5rem;">READY?</h1>
+            <p style="color: var(--text-dim); margin-bottom: 2rem;">Enter your stage name to join the game</p>
+            <input type="text" id="name-input" placeholder="Type your name..." autocomplete="off">
+            <button class="btn btn-primary" id="join-btn" style="width: 100%; padding: 1.25rem;">JOIN CONTEST</button>
         </div>
     </div>
 
     <div class="status-bar glass">
         <div class="status-indicator">
             <div id="connection-dot" class="dot"></div>
-            <span id="connection-text">Connecting...</span>
+            <span id="connection-text" style="font-size: 0.8rem; letter-spacing: 1px;">OFFLINE</span>
         </div>
         <div id="lock-status" class="status-indicator">
-            <span id="lock-text">LOCKED</span>
+            <span id="lock-text" style="font-size: 0.8rem; letter-spacing: 1px;">LOCKED</span>
             <div id="lock-dot" class="dot locked"></div>
         </div>
     </div>
 
-    <div class="buzzer-container">
-        <div id="user-info" style="margin-bottom: 0.5rem; text-align: center;">
-            <h1 id="display-name">---</h1>
-            <p style="color: var(--text-dim)">Score: <span id="display-score">0</span></p>
+    <div class="container">
+        <div id="user-info" style="text-align: center; animation: fadeInDown 0.8s ease-out;">
+            <p style="color: var(--primary); font-weight: 600; font-size: 0.9rem; letter-spacing: 2px;">PARTICIPANT</p>
+            <h1 id="display-name" style="font-size: 3rem; font-weight: 800; text-transform: uppercase;">---</h1>
+            <div
+                style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--surface); padding: 0.5rem 1.5rem; border-radius: 30px; margin-top: 1rem; border: 1px solid var(--glass-border);">
+                <span style="color: var(--text-dim); font-size: 0.9rem;">SCORE</span>
+                <span id="display-score" style="font-size: 1.2rem; font-weight: 800; color: var(--success);">0</span>
+            </div>
         </div>
-        
-        <button id="buzzer" disabled>BUZZ</button>
-        
-        <div id="personal-status" style="margin-top: 1rem; font-weight: 600;"></div>
+
+        <div class="buzzer-container">
+            <button id="buzzer" disabled>BUZZ</button>
+            <div class="buzzer-ring"></div>
+        </div>
+
+        <div id="personal-status"
+            style="height: 24px; font-weight: 800; letter-spacing: 1px; font-size: 1.1rem; text-transform: uppercase;">
+        </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -46,7 +58,7 @@
         const nameInput = document.getElementById('name-input');
         const joinBtn = document.getElementById('join-btn');
         const personalStatus = document.getElementById('personal-status');
-        
+
         let myName = '';
 
         joinBtn.onclick = () => {
@@ -54,39 +66,42 @@
             if (name) {
                 myName = name;
                 socket.emit('join', name);
-                loginOverlay.style.display = 'none';
+                loginOverlay.style.opacity = '0';
+                setTimeout(() => loginOverlay.style.display = 'none', 300);
                 document.getElementById('display-name').textContent = name;
             }
         };
 
         buzzer.onpointerdown = (e) => {
-            e.preventDefault();
+            if (buzzer.disabled) return;
+            if (navigator.vibrate) navigator.vibrate(100);
             socket.emit('buzz');
         };
 
         socket.on('connect', () => {
             document.getElementById('connection-dot').className = 'dot online';
-            document.getElementById('connection-text').textContent = 'Live';
+            document.getElementById('connection-text').textContent = 'CONNECTED';
         });
 
         socket.on('disconnect', () => {
             document.getElementById('connection-dot').className = 'dot';
-            document.getElementById('connection-text').textContent = 'Offline';
+            document.getElementById('connection-text').textContent = 'OFFLINE';
         });
 
         socket.on('lockStatus', (isLocked) => {
             buzzer.disabled = isLocked;
             const lockDot = document.getElementById('lock-dot');
             const lockText = document.getElementById('lock-text');
-            
+
             if (isLocked) {
                 lockDot.className = 'dot locked';
                 lockText.textContent = 'LOCKED';
+                lockText.style.color = 'var(--accent)';
             } else {
                 lockDot.className = 'dot online';
                 lockText.textContent = 'READY';
+                lockText.style.color = 'var(--success)';
                 personalStatus.textContent = '';
-                personalStatus.style.color = 'inherit';
             }
         });
 
@@ -94,8 +109,8 @@
             const myBuzz = buzzers.find(b => b.name === myName);
             if (myBuzz) {
                 const pos = buzzers.indexOf(myBuzz) + 1;
-                personalStatus.textContent = `BUZZED! POSITION: ${pos}`;
-                personalStatus.style.color = pos === 1 ? '#fbbf24' : '#94a3b8';
+                personalStatus.textContent = `POSITION #${pos}`;
+                personalStatus.style.color = pos === 1 ? '#fbbf24' : (pos === 2 ? '#94a3b8' : '#cd7f32');
                 buzzer.disabled = true;
             }
         });
@@ -112,4 +127,5 @@
         });
     </script>
 </body>
+
 </html>
