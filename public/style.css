@@ -25,9 +25,9 @@
 body {
     background: var(--bg);
     background-image:
-        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-        url('https://wallpaperaccess.com/full/1595162.jpg');
-    /* Ben 10 Comic Burst Background */
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('https://images.alphacoders.com/605/605944.jpg');
+    /* High-res Ben 10 Character Poster */
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -199,8 +199,8 @@ body {
     inset: 0;
     background: var(--bg);
     background-image:
-        linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
-        url('https://wallpaperaccess.com/full/1595162.jpg');
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('https://wallpapers.com/images/featured/ben-10-alien-force-u9n2i6qiw5pdt5k4.jpg');
     background-size: cover;
     background-position: center;
     z-index: 1000;
