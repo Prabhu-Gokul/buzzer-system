@@ -41,15 +41,51 @@ body {
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
+.college-header {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 3px solid #ff4d4d;
+    margin-bottom: 1rem;
+}
+
+.college-name {
+    color: #ff4d4d;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 77, 77, 0.3);
+}
+
+.dept-name {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 4px;
+    letter-spacing: 1px;
+}
+
+.event-name-banner {
+    background: var(--primary);
+    color: white;
+    padding: 4px 15px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    display: inline-block;
+}
+
 /* Status Bar */
 .status-bar {
-    padding: 1.5rem 2rem;
-    margin: 1rem;
+    padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
     z-index: 100;
+    margin-bottom: 1rem;
 }
 
 .status-indicator {
