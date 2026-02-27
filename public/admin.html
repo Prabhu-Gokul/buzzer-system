@@ -10,26 +10,22 @@
         body {
             align-items: stretch;
         }
-
-        .controls {
-            display: flex;
-            gap: 1rem;
-        }
     </style>
 </head>
 
 <body>
     <div class="college-header">
-        <div class="college-name">Suguna College of Engineering</div>
+        <div class="college-name">SUGUNA COLLEGE OF ENGINEERING</div>
         <div class="dept-name">Artificial Intelligence & Data Science | Information Technology</div>
-        <div class="event-name-banner" style="margin-top: 10px;">OMNI TECH - ADMIN</div>
+        <div class="event-name-banner">OMNI TECH - ADMIN</div>
     </div>
-    <div class="status-bar glass">
+
+    <div class="status-bar">
         <div class="status-indicator">
             <div class="dot online"></div>
-            <span>ADMIN CONSOLE</span>
+            <span style="font-family: 'Bungee', cursive; letter-spacing: 1px;">ADMIN CONSOLE</span>
         </div>
-        <div>
+        <div style="font-weight: 600;">
             <span>Connected: </span><span id="participant-count">0</span>
         </div>
     </div>
@@ -37,42 +33,42 @@
     <div class="admin-grid">
         <!-- Left Column: Controls and Buzzers -->
         <div class="panel glass">
-            <div class="controls">
-                <button class="btn btn-primary" id="start-btn">START ROUND</button>
-                <button class="btn btn-danger" id="reset-btn">RESET ALL</button>
+            <div class="controls" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                <button class="btn" id="start-btn" style="background: #6366f1; color: white;">START ROUND</button>
+                <button class="btn" id="reset-btn" style="background: #f43f5e; color: white;">RESET ALL</button>
                 <button class="btn btn-danger" id="lock-btn" style="background: var(--secondary); display: none;">LOCK
                     NOW</button>
             </div>
 
-            <div style="margin-top: 2rem; text-align: center;" id="qr-section">
-                <h4 style="margin-bottom: 1rem; color: var(--text-dim);">SCAN TO JOIN</h4>
-                <div class="glass" style="display: inline-block; padding: 1rem; background: white;">
-                    <img id="qr-code" src="" alt="Scan to join" style="display: block; width: 150px; height: 150px;">
+            <div style="text-align: center; margin-bottom: 2rem;" id="qr-section">
+                <h4
+                    style="margin-bottom: 1rem; color: var(--text); font-family: 'Bungee', cursive; letter-spacing: 2px;">
+                    SCAN TO JOIN</h4>
+                <div style="display: inline-block; padding: 1rem; background: white; border-radius: 15px;">
+                    <img id="qr-code" src="" alt="Scan to join" style="display: block; width: 140px; height: 140px;">
                 </div>
-                <p id="join-url" style="margin-top: 1rem; font-size: 0.8rem; color: var(--primary); font-weight: 600;">
-                </p>
+                <p id="join-url" style="margin-top: 1rem; font-size: 0.8rem; color: var(--text); font-weight: 600;"></p>
             </div>
 
-            <hr style="border: 0.5px solid rgba(255,255,255,0.1)">
-
-            <h3>Current Buzzers</h3>
-            <div class="positions" id="buzz-results">
+            <h3 style="font-family: 'Bungee', cursive; letter-spacing: 1px; color: var(--text);">Current Buzzers</h3>
+            <div class="positions" id="buzz-results" style="margin-top: 1rem;">
                 <!-- Buzzers will appear here -->
             </div>
         </div>
 
         <!-- Right Column: Participant List and Scoring -->
         <div class="panel glass">
-            <h2>Leaderboard</h2>
-            <ul class="participant-list" id="participant-list">
+            <h2 style="color: #a855f7; font-family: 'Bungee', cursive; font-size: 2rem; margin-bottom: 0.5rem;">
+                Leaderboard</h2>
+            <hr style="border: 0.5px solid rgba(255,255,255,0.2); margin-bottom: 1.5rem;">
+
+            <ul class="participant-list" id="participant-list" style="margin-bottom: 2.5rem;">
                 <!-- Participants will appear here -->
             </ul>
 
-            <hr style="border: 0.5px solid rgba(255,255,255,0.1)">
-
-            <h3>Round History</h3>
+            <h3 style="font-family: 'Bungee', cursive; letter-spacing: 1px; color: var(--text);">Round History</h3>
             <div id="history-log"
-                style="font-size: 0.8rem; color: var(--text-dim); overflow-y: auto; max-height: 200px;">
+                style="font-size: 0.8rem; color: var(--text-dim); overflow-y: auto; max-height: 250px; margin-top: 1rem;">
                 <!-- History logs -->
             </div>
         </div>
@@ -91,8 +87,8 @@
         startBtn.onclick = () => socket.emit('admin_start');
         resetBtn.onclick = () => socket.emit('admin_reset');
         lockBtn.onclick = () => {
-            socket.emit('admin_logRound', { winners: [] }); // Simple log trigger
-            socket.emit('admin_reset'); // Lock by resetting state back to locked
+            socket.emit('admin_logRound', { winners: [] });
+            socket.emit('admin_reset');
         };
 
         // Generate QR Code dynamically
@@ -105,11 +101,11 @@
             participantList.innerHTML = participants
                 .sort((a, b) => b.score - a.score)
                 .map(p => `
-                    <li class="participant-item">
+                    <li class="participant-item" style="background: rgba(255,255,255,0.02)">
                         <span style="font-weight:600;">${p.name}</span>
                         <div style="display: flex; gap: 0.75rem; align-items: center;">
                             <span class="score-badge">${p.score}</span>
-                            <button onclick="award('${p.id}', 10)" class="btn btn-primary" style="padding: 4px 10px; font-size:0.7rem;">+10</button>
+                            <button onclick="award('${p.id}', 10)" class="btn btn-primary" style="padding: 4px 10px; font-size:0.7rem; background: #6366f1;">+10</button>
                         </div>
                     </li>
                 `).join('');
@@ -123,14 +119,14 @@
                 const timeDiff = i === 0 ? 'FASTEST' : `+${((b.timestamp - firstBuzzTime) / 1000).toFixed(3)}s`;
 
                 return `
-                <div class="position-card ${posClass}">
+                <div class="position-card ${posClass}" style="margin-bottom: 0.75rem;">
                     <div class="rank-circle">#${i + 1}</div>
                     <div>
                         <div style="font-weight: 800; font-size: 1.4rem;">${b.name}</div>
                         <div class="time-gap">${timeDiff}</div>
                     </div>
                     <div style="margin-left: auto;">
-                        <button onclick="award('${b.socketId}', 10)" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.8rem;">+10</button>
+                        <button onclick="award('${b.socketId}', 10)" class="btn" style="padding: 8px 16px; font-size: 0.8rem; background: #6366f1; color: white;">+10</button>
                     </div>
                 </div>
                 `;
@@ -139,7 +135,7 @@
 
         socket.on('historyUpdate', (history) => {
             historyLog.innerHTML = history.reverse().map(h => `
-                <div style="padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05)">
+                <div style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05)">
                     [${h.timestamp}] Winners: ${h.winners.join(', ') || 'None'}
                 </div>
             `).join('');
@@ -152,7 +148,7 @@
         });
 
         socket.on('roundStarted', () => {
-            buzzResults.innerHTML = '<p style="text-align:center; color: var(--success);">ROUND ACTIVE - WAITING FOR BUZZERS...</p>';
+            buzzResults.innerHTML = '<p style="text-align:center; color: #39FF14; font-weight: 800;">ROUND ACTIVE - WAITING...</p>';
         });
 
         socket.on('roundReset', () => {

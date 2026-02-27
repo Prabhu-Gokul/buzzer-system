@@ -4,15 +4,17 @@
     --bg: #050a05;
     --omnitrix-green: #39FF14;
     --omnitrix-dark: #121212;
-    --primary: linear-gradient(135deg, #22c55e, #16a34a);
+    --primary: linear-gradient(135deg, #6366f1, #a855f7);
+    /* Purple like screenshot */
     --secondary: linear-gradient(135deg, #39FF14, #008000);
-    --accent: #ff4d4d;
-    /* College Red */
+    --accent: #f43f5e;
+    /* Red/Pink like screenshot */
+    --college-red: #ff4d4d;
     --success: #39FF14;
     --text: #f8fafc;
     --text-dim: #a3a3a3;
-    --glass: rgba(0, 255, 0, 0.05);
-    --glass-border: rgba(57, 255, 20, 0.2);
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -41,43 +43,54 @@ body {
 /* College Branding Header */
 .college-header {
     text-align: center;
-    padding: 1.5rem 1rem;
-    background: rgba(0, 0, 0, 0.4);
-    border-bottom: 4px solid var(--accent);
-    box-shadow: 0 4px 20px rgba(255, 77, 77, 0.2);
+    padding: 2rem 1rem 1rem 1rem;
+    background: transparent;
+    border-bottom: 2px solid #6366f1;
+    /* Purple accent */
+    position: relative;
     z-index: 100;
 }
 
+.college-header::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #ff4d4d;
+    /* Iconic red line from screenshot */
+}
+
 .college-name {
-    color: var(--accent);
-    font-size: 1.6rem;
-    font-weight: 800;
+    color: #ff4d4d;
+    font-size: 2.2rem;
+    font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    font-family: 'Bungee', cursive;
-    text-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
+    letter-spacing: 3px;
+    font-family: 'Outfit', sans-serif;
+    /* Cleaner font like screenshot */
+    margin-bottom: 5px;
 }
 
 .dept-name {
-    color: var(--text-dim);
-    font-size: 0.8rem;
+    color: var(--text);
+    font-size: 0.9rem;
     font-weight: 600;
-    margin-top: 5px;
-    letter-spacing: 1.5px;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
 }
 
 .event-name-banner {
-    background: var(--secondary);
-    color: black;
-    padding: 6px 20px;
-    border-radius: 4px;
-    font-weight: 900;
-    font-size: 1.4rem;
-    letter-spacing: 4px;
+    background: #a855f7;
+    /* Purple pill */
+    color: white;
+    padding: 8px 35px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
     display: inline-block;
-    margin-top: 10px;
-    box-shadow: 0 0 15px var(--omnitrix-green);
-    font-family: 'Bungee', cursive;
 }
 
 .sub-event-name {
@@ -91,21 +104,24 @@ body {
 
 /* Glassmorphism */
 .glass {
-    background: rgba(18, 18, 18, 0.4);
-    /* More transparent for better background visibility */
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--glass-border);
-    border-radius: 24px;
-    box-shadow: 0 0 30px rgba(57, 255, 20, 0.1);
+    background: rgba(18, 18, 18, 0.25);
+    /* Transparent for character visibility */
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
 }
 
 /* Status Bar */
 .status-bar {
-    padding: 1rem 2rem;
+    padding: 0.75rem 2.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 1rem;
+    background: rgba(18, 18, 18, 0.6);
+    /* Darker bar like screenshot */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 2rem 0;
 }
 
 .status-indicator {
