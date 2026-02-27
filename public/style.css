@@ -40,6 +40,12 @@ body {
     overflow-x: hidden;
 }
 
+body.admin-body {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('admin_bg.png');
+}
+
 /* College Branding Header */
 .college-header {
     text-align: center;
