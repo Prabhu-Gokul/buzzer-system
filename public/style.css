@@ -211,10 +211,25 @@ body {
     color: white;
 }
 
+.pos-3 {
+    background: linear-gradient(90deg, #cd7f32, #8b4513);
+    color: white;
+}
+
 .pos-any {
     background: rgba(255, 255, 255, 0.1);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.time-gap {
+    font-family: monospace;
+    font-size: 0.8rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 5px;
+    display: inline-block;
 }
 
 @keyframes slideIn {

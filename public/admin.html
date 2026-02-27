@@ -98,14 +98,19 @@
         });
 
         socket.on('buzzReceived', (buzzers) => {
+            const firstBuzzTime = buzzers[0].timestamp;
+
             buzzResults.innerHTML = buzzers.map((b, i) => {
-                const posClass = (i === 0) ? 'pos-1' : (i === 1) ? 'pos-2' : 'pos-any';
+                const posClass = (i === 0) ? 'pos-1' : (i === 1) ? 'pos-2' : (i === 2) ? 'pos-3' : 'pos-any';
+                const timeDiff = i === 0 ? 'FASTEST' : `+${((b.timestamp - firstBuzzTime) / 1000).toFixed(3)}s`;
+
                 return `
                 <div class="position-card ${posClass}">
                     <div style="font-size: 1.5rem; font-weight: bold;">#${i + 1}</div>
                     <div>
                         <div style="font-weight: bold; font-size: 1.2rem;">${b.name}</div>
-                        <div style="font-size: 0.8rem; opacity: 0.8;">${new Date(b.timestamp).toLocaleTimeString()}</div>
+                        <div class="time-gap">${timeDiff}</div>
+                        <div style="font-size: 0.7rem; opacity: 0.6; margin-top:2px;">${new Date(b.timestamp).toLocaleTimeString()}</div>
                     </div>
                     <div style="margin-left: auto;">
                         <button onclick="award('${b.socketId}', 10)" class="btn btn-primary" style="padding: 5px 10px; font-size: 0.7rem;">+10</button>
