@@ -36,6 +36,8 @@
             <div class="controls">
                 <button class="btn btn-primary" id="start-btn">START ROUND</button>
                 <button class="btn btn-danger" id="reset-btn">RESET ALL</button>
+                <button class="btn btn-danger" id="lock-btn" style="background: var(--secondary); display: none;">LOCK
+                    NOW</button>
             </div>
 
             <hr style="border: 0.5px solid rgba(255,255,255,0.1)">
@@ -68,12 +70,17 @@
         const socket = io();
         const startBtn = document.getElementById('start-btn');
         const resetBtn = document.getElementById('reset-btn');
+        const lockBtn = document.getElementById('lock-btn');
         const buzzResults = document.getElementById('buzz-results');
         const participantList = document.getElementById('participant-list');
         const historyLog = document.getElementById('history-log');
 
         startBtn.onclick = () => socket.emit('admin_start');
         resetBtn.onclick = () => socket.emit('admin_reset');
+        lockBtn.onclick = () => {
+            socket.emit('admin_logRound', { winners: [] }); // Simple log trigger
+            socket.emit('admin_reset'); // Lock by resetting state back to locked
+        };
 
         socket.on('participantUpdate', (participants) => {
             document.getElementById('participant-count').textContent = participants.length;
@@ -91,8 +98,10 @@
         });
 
         socket.on('buzzReceived', (buzzers) => {
-            buzzResults.innerHTML = buzzers.map((b, i) => `
-                <div class="position-card pos-${i + 1}">
+            buzzResults.innerHTML = buzzers.map((b, i) => {
+                const posClass = (i === 0) ? 'pos-1' : (i === 1) ? 'pos-2' : 'pos-any';
+                return `
+                <div class="position-card ${posClass}">
                     <div style="font-size: 1.5rem; font-weight: bold;">#${i + 1}</div>
                     <div>
                         <div style="font-weight: bold; font-size: 1.2rem;">${b.name}</div>
@@ -102,12 +111,8 @@
                         <button onclick="award('${b.socketId}', 10)" class="btn btn-primary" style="padding: 5px 10px; font-size: 0.7rem;">+10</button>
                     </div>
                 </div>
-            `).join('');
-
-            if (buzzers.length === 2) {
-                // Auto log after second buzz
-                socket.emit('admin_logRound', { winners: buzzers.map(b => b.name) });
-            }
+                `;
+            }).join('');
         });
 
         socket.on('historyUpdate', (history) => {
@@ -121,6 +126,7 @@
         socket.on('lockStatus', (isLocked) => {
             startBtn.disabled = !isLocked;
             startBtn.style.opacity = isLocked ? '1' : '0.5';
+            lockBtn.style.display = isLocked ? 'none' : 'block';
         });
 
         socket.on('roundStarted', () => {

@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
 
     socket.on('buzz', () => {
         if (state.isLocked) return;
-        
+
         const participant = state.participants[socket.id];
         if (!participant) return;
 
@@ -54,23 +54,16 @@ io.on('connection', (socket) => {
         const alreadyBuzzed = state.buzzers.find(b => b.socketId === socket.id);
         if (alreadyBuzzed) return;
 
-        // Atomic capture (first 2)
-        if (state.buzzers.length < 2) {
-            const buzzEntry = {
-                name: participant.name,
-                socketId: socket.id,
-                timestamp: Date.now()
-            };
-            state.buzzers.push(buzzEntry);
-            
-            io.emit('buzzReceived', state.buzzers);
+        // Atomic capture (Allow all until manual lock)
+        const buzzEntry = {
+            name: participant.name,
+            socketId: socket.id,
+            timestamp: Date.now()
+        };
+        state.buzzers.push(buzzEntry);
 
-            // Auto-lock after 2nd buzz
-            if (state.buzzers.length === 2) {
-                state.isLocked = true;
-                io.emit('lockStatus', true);
-            }
-        }
+        io.emit('buzzReceived', state.buzzers);
+        console.log(`${participant.name} buzzed at position ${state.buzzers.length}`);
     });
 
     // Admin Controls

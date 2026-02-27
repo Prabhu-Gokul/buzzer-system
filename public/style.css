@@ -70,8 +70,14 @@ body {
     background: #475569;
 }
 
-.dot.online { background: var(--success); box-shadow: 0 0 10px var(--success); }
-.dot.locked { background: var(--accent); }
+.dot.online {
+    background: var(--success);
+    box-shadow: 0 0 10px var(--success);
+}
+
+.dot.locked {
+    background: var(--accent);
+}
 
 /* Buzzer Button */
 .buzzer-container {
@@ -142,9 +148,19 @@ body {
     transition: transform 0.2s;
 }
 
-.btn:active { transform: scale(0.95); }
-.btn-primary { background: var(--primary); color: var(--bg); }
-.btn-danger { background: var(--accent); color: white; }
+.btn:active {
+    transform: scale(0.95);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: var(--bg);
+}
+
+.btn-danger {
+    background: var(--accent);
+    color: white;
+}
 
 .participant-list {
     list-style: none;
@@ -185,16 +201,38 @@ body {
     animation: slideIn 0.3s ease-out;
 }
 
-.pos-1 { background: linear-gradient(90deg, #fbbf24, #d97706); color: #451a03; }
-.pos-2 { background: linear-gradient(90deg, #94a3b8, #475569); color: white; }
+.pos-1 {
+    background: linear-gradient(90deg, #fbbf24, #d97706);
+    color: #451a03;
+}
+
+.pos-2 {
+    background: linear-gradient(90deg, #94a3b8, #475569);
+    color: white;
+}
+
+.pos-any {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
 @keyframes slideIn {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 @media (max-width: 768px) {
-    .admin-grid { grid-template-columns: 1fr; }
+    .admin-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Login Overlay */
@@ -222,8 +260,8 @@ input {
     width: 100%;
     padding: 0.75rem;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
     color: white;
     font-size: 1rem;
 }
