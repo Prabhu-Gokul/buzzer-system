@@ -26,8 +26,8 @@ body {
     background: var(--bg);
     background-image:
         linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-        url('https://wallpaperaccess.com/full/429402.jpg');
-    /* Reliable High-res Ben 10 Poster */
+        url('ben10_bg.png');
+    /* Local 4K Ben 10 Background */
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -201,7 +201,7 @@ body {
     background: var(--bg);
     background-image:
         linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-        url('https://wallpapers.com/images/featured/ben-10-alien-force-u9n2i6qiw5pdt5k4.jpg');
+        url('ben10_bg.png');
     background-size: cover;
     background-position: center;
     z-index: 1000;
