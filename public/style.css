@@ -25,8 +25,12 @@
 body {
     background: var(--bg);
     background-image:
-        radial-gradient(circle at 50% 50%, rgba(57, 255, 20, 0.1) 0%, transparent 70%),
-        url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url('https://wallpaperaccess.com/full/1595162.jpg');
+    /* Ben 10 Comic Burst Background */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: var(--text);
     min-height: 100vh;
     display: flex;
@@ -193,8 +197,12 @@ body {
 #login-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.95);
-    background-image: radial-gradient(circle at center, rgba(57, 255, 20, 0.1) 0%, black 100%);
+    background: var(--bg);
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+        url('https://wallpaperaccess.com/full/1595162.jpg');
+    background-size: cover;
+    background-position: center;
     z-index: 1000;
     display: flex;
     justify-content: center;
