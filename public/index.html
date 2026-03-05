@@ -82,6 +82,13 @@
         buzzer.onpointerdown = (e) => {
             if (buzzer.disabled) return;
             if (navigator.vibrate) navigator.vibrate(100);
+
+            // Immediate visual feedback (Optimistic UI)
+            buzzer.disabled = true;
+            buzzer.textContent = 'BUZZED';
+            personalStatus.textContent = 'WAITING FOR RESULTS...';
+            personalStatus.style.color = 'var(--text-dim)';
+
             socket.emit('buzz');
         };
 
@@ -109,6 +116,7 @@
                 lockText.textContent = 'READY';
                 lockText.style.color = 'var(--success)';
                 personalStatus.textContent = '';
+                buzzer.textContent = 'BUZZ';
             }
         });
 

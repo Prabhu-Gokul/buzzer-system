@@ -39,15 +39,6 @@
                 <button class="btn btn-green" id="lock-btn" style="display: none; min-width: 200px;">LOCK NOW</button>
             </div>
 
-            <div style="text-align: center; margin-bottom: 2rem;" id="qr-section">
-                <h4
-                    style="margin-bottom: 1rem; color: var(--text); font-family: 'Bungee', cursive; letter-spacing: 2px;">
-                    SCAN TO JOIN</h4>
-                <div style="display: inline-block; padding: 1rem; background: white; border-radius: 15px;">
-                    <img id="qr-code" src="" alt="Scan to join" style="display: block; width: 140px; height: 140px;">
-                </div>
-                <p id="join-url" style="margin-top: 1rem; font-size: 0.8rem; color: var(--text); font-weight: 600;"></p>
-            </div>
 
             <h3 style="font-family: 'Bungee', cursive; letter-spacing: 1px; color: var(--text);">Current Buzzers</h3>
             <div class="positions" id="buzz-results" style="margin-top: 1rem;">
@@ -90,10 +81,6 @@
             socket.emit('admin_reset');
         };
 
-        // Generate QR Code dynamically
-        const currentUrl = window.location.origin;
-        document.getElementById('qr-code').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(currentUrl)}`;
-        document.getElementById('join-url').textContent = currentUrl;
 
         socket.on('participantUpdate', (participants) => {
             document.getElementById('participant-count').textContent = participants.length;
@@ -111,14 +98,29 @@
         });
 
         socket.on('buzzReceived', (buzzers) => {
+            if (!buzzers || buzzers.length === 0) {
+                buzzResults.innerHTML = '';
+                return;
+            }
             const firstBuzzTime = buzzers[0].timestamp;
 
-            buzzResults.innerHTML = buzzers.map((b, i) => {
+            // Clear the "waiting" message if this is the first buzz
+            if (buzzers.length === 1) {
+                buzzResults.innerHTML = '';
+            }
+
+            buzzers.forEach((b, i) => {
+                const existingCard = document.getElementById(`buzz-${b.socketId}`);
+                if (existingCard) return; // Already rendered
+
                 const posClass = (i === 0) ? 'pos-1' : (i === 1) ? 'pos-2' : (i === 2) ? 'pos-3' : 'pos-any';
                 const timeDiff = i === 0 ? 'FASTEST' : `+${((b.timestamp - firstBuzzTime) / 1000).toFixed(3)}s`;
 
-                return `
-                <div class="position-card ${posClass}" style="margin-bottom: 0.75rem;">
+                const card = document.createElement('div');
+                card.id = `buzz-${b.socketId}`;
+                card.className = `position-card ${posClass} animate-in`;
+                card.style.marginBottom = '0.75rem';
+                card.innerHTML = `
                     <div class="rank-circle">#${i + 1}</div>
                     <div>
                         <div style="font-weight: 800; font-size: 1.4rem;">${b.name}</div>
@@ -127,9 +129,9 @@
                     <div style="margin-left: auto;">
                         <button onclick="award('${b.socketId}', 10)" class="btn" style="padding: 8px 16px; font-size: 0.8rem; background: #6366f1; color: white;">+10</button>
                     </div>
-                </div>
                 `;
-            }).join('');
+                buzzResults.appendChild(card);
+            });
         });
 
         socket.on('historyUpdate', (history) => {
