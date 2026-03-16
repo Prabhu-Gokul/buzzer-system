@@ -2,6 +2,21 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
+const os = require('os');
+
+// Helper to get local IP
+function getLocalIP() {
+    const interfaces = os.networkInterfaces();
+    for (const name of Object.keys(interfaces)) {
+        for (const iface of interfaces[name]) {
+            if (iface.family === 'IPv4' && !iface.internal) {
+                return iface.address;
+            }
+        }
+    }
+    return 'localhost';
+}
+const localIp = getLocalIP();
 
 const app = express();
 const server = http.createServer(app);
@@ -33,6 +48,9 @@ io.on('connection', (socket) => {
         buzzers: state.buzzers,
         participantCount: Object.values(state.participants).filter(p => p.connected).length
     });
+    
+    // Send IP Info for QR code
+    socket.emit('serverInfo', { ip: localIp, port: PORT });
 
     socket.on('join', (name) => {
         state.participants[socket.id] = {

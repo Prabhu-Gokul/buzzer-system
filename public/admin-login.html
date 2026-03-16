@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - OMNI TECH</title>
+    <link rel="stylesheet" href="style.css?v=3">
+    <style>
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('admin_bg.png');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card glass">
+            <div class="sub-event-name">ADMIN PORTAL</div>
+            <h1 style="font-weight: 800; font-size: 2rem; margin-bottom: 1rem;">SECURE ACCESS</h1>
+            <p style="color: var(--text-dim); margin-bottom: 2rem;">Please enter the administrator password</p>
+            <form id="admin-login-form" action="/admin-login" method="POST">
+                <input type="password" name="password" id="password-input" placeholder="Password..." required>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1.25rem;">AUTHENTICATE</button>
+            </form>
+            <div id="error-message" style="color: var(--accent); margin-top: 1rem; font-weight: 600; display: none;">
+                Invalid Password. Access Denied.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('error')) {
+            document.getElementById('error-message').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

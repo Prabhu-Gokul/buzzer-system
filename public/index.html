@@ -16,12 +16,15 @@
     </div>
 
     <div id="login-overlay">
-        <div class="login-card glass">
-            <div class="sub-event-name">NEURAL NEXUS</div>
-            <h1 style="font-weight: 800; font-size: 2.5rem; margin-bottom: 0.5rem;">READY?</h1>
-            <p style="color: var(--text-dim); margin-bottom: 2rem;">Enter your stage name to join the game</p>
-            <input type="text" id="name-input" placeholder="Type your name..." autocomplete="off">
-            <button class="btn btn-primary" id="join-btn" style="width: 100%; padding: 1.25rem;">JOIN CONTEST</button>
+        <div class="particles" id="particles"></div>
+        <div class="anti-gravity-card">
+            <div class="login-card glass">
+                <div class="sub-event-name">OVERCLOCK</div>
+                <h1 class="ready-title">READY?</h1>
+                <p class="subtitle">Enter your stage name to join the game</p>
+                <input type="text" id="name-input" placeholder="Type your name..." autocomplete="off">
+                <button class="btn btn-cyber" id="join-btn" style="width: 100%; padding: 1.25rem;">JOIN CONTEST</button>
+            </div>
         </div>
     </div>
 
@@ -65,6 +68,19 @@
         const nameInput = document.getElementById('name-input');
         const joinBtn = document.getElementById('join-btn');
         const personalStatus = document.getElementById('personal-status');
+        const particlesContainer = document.getElementById('particles');
+
+        // Particle generation
+        for (let i = 0; i < 30; i++) {
+            let p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.width = Math.random() * 5 + 2 + 'px';
+            p.style.height = p.style.width;
+            p.style.animationDuration = Math.random() * 10 + 5 + 's';
+            p.style.animationDelay = Math.random() * 5 + 's';
+            particlesContainer.appendChild(p);
+        }
 
         let myName = '';
 
